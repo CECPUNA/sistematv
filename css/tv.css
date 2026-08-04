@@ -1,0 +1,242 @@
+/* ==============================================
+   Sistema TV - Ciencias Politicas UNA
+   Optimizado para pantallas 1080p / 4K en TV
+   ============================================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0a0e1a;
+  --bg2:        #111827;
+  --bg3:        #1e2537;
+  --border:     #2a3350;
+  --text:       #e8eaf6;
+  --text-muted: #8892b0;
+  --accent:     #4fc3f7;
+  --live:       #22c55e;
+  --exam:       #f59e0b;
+  --radius:     14px;
+  --font:       'Segoe UI', system-ui, sans-serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  overflow: hidden;
+  font-size: 18px;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* HEADER */
+.tv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 36px;
+  background: var(--bg2);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.tv-header-left  { display: flex; align-items: center; gap: 18px; }
+.tv-logo         { height: 52px; width: auto; }
+.tv-titulo       { font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: .03em; }
+.tv-subtitulo    { font-size: .85rem; color: var(--text-muted); margin-top: 2px; }
+.tv-header-right { text-align: right; }
+.tv-reloj {
+  font-size: 2.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  letter-spacing: .06em;
+}
+.tv-fecha { font-size: .85rem; color: var(--text-muted); margin-top: 2px; }
+
+/* MAIN */
+.tv-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tv-col {
+  padding: 22px 28px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.tv-col::-webkit-scrollbar       { width: 4px; }
+.tv-col::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.tv-col-clases   { flex: 1.7; border-right: 2px solid var(--border); }
+.tv-col-examenes { flex: 1; }
+
+/* TITLES */
+.tv-section-title {
+  font-size: .95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tv-mt { margin-top: 28px; }
+
+.punto-live {
+  display: inline-block;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--live);
+  animation: pulse-live 1.4s infinite;
+}
+@keyframes pulse-live {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.6); }
+  70%  { box-shadow: 0 0 0 9px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+.icono-prox { color: var(--accent); font-size: .85rem; }
+
+/* CARDS CLASES */
+.tv-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.tv-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  border-left: 5px solid var(--border);
+  position: relative;
+}
+.tv-card.live {
+  border-left-color: var(--live);
+  background: #0d2718;
+}
+.tv-card-semestre {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 5px;
+}
+.tv-card-materia {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.tv-card-meta {
+  font-size: .78rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.tv-badge-live {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: var(--live);
+  color: #000;
+  font-size: .65rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* EXAMENES */
+.tv-exam-list { display: flex; flex-direction: column; gap: 10px; }
+
+.tv-exam-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 13px 16px;
+  border-left: 5px solid var(--exam);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tv-exam-semestre {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 2px;
+}
+.tv-exam-tipo {
+  display: inline-block;
+  width: fit-content;
+  font-size: .7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(245,158,11,.15);
+  color: var(--exam);
+  border: 1px solid rgba(245,158,11,.3);
+  margin-bottom: 2px;
+}
+.tv-exam-materia {
+  font-size: .98rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+.tv-exam-meta {
+  font-size: .78rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* EMPTY */
+.tv-empty {
+  color: var(--text-muted);
+  font-size: .9rem;
+  padding: 14px 0;
+  font-style: italic;
+}
+
+/* FOOTER TICKER */
+.tv-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg2);
+  border-top: 2px solid var(--border);
+  padding: 8px 24px;
+  flex-shrink: 0;
+  gap: 20px;
+}
+.tv-ticker-wrap { flex: 1; overflow: hidden; }
+.tv-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker-scroll 50s linear infinite;
+  color: var(--text-muted);
+  font-size: .82rem;
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+.tv-refresh-info {
+  font-size: .78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

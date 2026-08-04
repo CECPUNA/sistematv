@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema TV – Cs. Políticas UNA</title>
+  <link rel="stylesheet" href="css/tv.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="tv-header">
+    <div class="tv-header-left">
+      <img src="img/logo-cecp.png" alt="CECP" class="tv-logo" onerror="this.style.display='none'" />
+      <div>
+        <div class="tv-titulo">Ciencias Políticas &middot; UNA</div>
+        <div class="tv-subtitulo">Campus Escuela &ndash; Información Académica</div>
+      </div>
+    </div>
+    <div class="tv-header-right">
+      <div class="tv-reloj" id="reloj">00:00:00</div>
+      <div class="tv-fecha" id="fecha">Cargando...</div>
+    </div>
+  </header>
+
+  <!-- MAIN: izquierda (clases) + derecha (exámenes) -->
+  <main class="tv-main">
+
+    <!-- IZQUIERDA -->
+    <section class="tv-col tv-col-clases">
+      <div class="tv-section-title">
+        <span class="punto-live"></span> Clases en Curso
+      </div>
+      <div id="clasesAhora" class="tv-cards-grid">
+        <div class="tv-empty">Sin clases en este momento</div>
+      </div>
+
+      <div class="tv-section-title tv-mt">
+        <span class="icono-prox">&#9654;</span> Próximas Hoy
+      </div>
+      <div id="clasesProximas" class="tv-cards-grid">
+        <div class="tv-empty">Sin más clases hoy</div>
+      </div>
+    </section>
+
+    <!-- DERECHA -->
+    <section class="tv-col tv-col-examenes">
+      <div class="tv-section-title">
+        &#128203; Horario de Exámenes
+      </div>
+      <div id="examenesContainer" class="tv-exam-list">
+        <div class="tv-empty">Sin exámenes programados</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER TICKER -->
+  <footer class="tv-footer">
+    <div class="tv-ticker-wrap">
+      <div class="tv-ticker" id="ticker">
+        Escuela de Ciencias Políticas &middot; Universidad Nacional de Asunción
+        &middot; Actualizado automáticamente cada 5 minutos
+      </div>
+    </div>
+    <div class="tv-refresh-info">
+      Próxima actualización: <span id="cuentaRegresiva">5:00</span>
+    </div>
+  </footer>
+
+</div>
+<script src="js/tv.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "semestres": [
+    {
+      "id": "2do",
+      "label": "2° Semestre",
+      "color": "#4fc3f7",
+      "dataUrl": "https://cecpuna.github.io/2dosemestre/data/2do.json"
+    },
+    {
+      "id": "4to",
+      "label": "4° Semestre",
+      "color": "#ce93d8",
+      "dataUrl": "https://cecpuna.github.io/4tosemestre/data/4to.json"
+    },
+    {
+      "id": "6to",
+      "label": "6° Semestre",
+      "color": "#80cbc4",
+      "dataUrl": "https://cecpuna.github.io/6tosemestre/data/6to.json"
+    },
+    {
+      "id": "8vo",
+      "label": "8° Semestre",
+      "color": "#ef9a9a",
+      "dataUrl": "https://cecpuna.github.io/8vosemestre/data/8vo.json"
+    }
+  ]
+}
