@@ -1,242 +1,289 @@
-/* ==============================================
-   Sistema TV - Ciencias Politicas UNA
-   Optimizado para pantallas 1080p / 4K en TV
-   ============================================== */
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:         #0a0e1a;
-  --bg2:        #111827;
-  --bg3:        #1e2537;
-  --border:     #2a3350;
-  --text:       #e8eaf6;
-  --text-muted: #8892b0;
-  --accent:     #4fc3f7;
-  --live:       #22c55e;
-  --exam:       #f59e0b;
-  --radius:     14px;
-  --font:       'Segoe UI', system-ui, sans-serif;
+* {
+  box-sizing: border-box;
 }
 
 html, body {
-  width: 100%; height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  overflow: hidden;
-  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000000;
+  color: #1a1a1a;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-#app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-}
-
-/* HEADER */
+/* ===== HEADER ===== */
 .tv-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 36px;
-  background: var(--bg2);
-  border-bottom: 2px solid var(--border);
-  flex-shrink: 0;
-}
-.tv-header-left  { display: flex; align-items: center; gap: 18px; }
-.tv-logo         { height: 52px; width: auto; }
-.tv-titulo       { font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: .03em; }
-.tv-subtitulo    { font-size: .85rem; color: var(--text-muted); margin-top: 2px; }
-.tv-header-right { text-align: right; }
-.tv-reloj {
-  font-size: 2.6rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--text);
-  letter-spacing: .06em;
-}
-.tv-fecha { font-size: .85rem; color: var(--text-muted); margin-top: 2px; }
-
-/* MAIN */
-.tv-main {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
+  background: #ffffff;
+  padding: 16px 32px;
+  border-bottom: 6px solid #000000;
 }
 
-.tv-col {
-  padding: 22px 28px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.tv-col::-webkit-scrollbar       { width: 4px; }
-.tv-col::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-.tv-col-clases   { flex: 1.7; border-right: 2px solid var(--border); }
-.tv-col-examenes { flex: 1; }
-
-/* TITLES */
-.tv-section-title {
-  font-size: .95rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--text-muted);
-  margin-bottom: 14px;
+.tv-header__brand,
+.tv-header__system {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 }
-.tv-mt { margin-top: 28px; }
 
-.punto-live {
-  display: inline-block;
-  width: 11px; height: 11px;
-  border-radius: 50%;
-  background: var(--live);
-  animation: pulse-live 1.4s infinite;
+.tv-header__logo {
+  height: 56px;
+  width: auto;
 }
-@keyframes pulse-live {
-  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.6); }
-  70%  { box-shadow: 0 0 0 9px rgba(34,197,94,0); }
-  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
-}
-.icono-prox { color: var(--accent); font-size: .85rem; }
 
-/* CARDS CLASES */
-.tv-cards-grid {
+.tv-header__seal img {
+  height: 70px;
+  width: auto;
+}
+
+.tv-header__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.tv-header__title {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.tv-header__subtitle {
+  font-weight: 700;
+  font-size: 12px;
+  color: #333333;
+}
+
+.tv-header__system .tv-header__title {
+  font-size: 20px;
+}
+
+.tv-header__system {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+/* ===== MAIN GRID ===== */
+.tv-main {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 2.4fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  padding-bottom: 64px;
+  align-items: start;
+}
+
+.tv-panel {
+  background: #e5e5e5;
+  border: 3px solid #000000;
+}
+
+.tv-panel__title {
+  margin: 0;
+  padding: 10px 16px;
+  background: #dcdcdc;
+  border-bottom: 3px solid #000000;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* ===== HORARIOS ===== */
+.tv-horarios-grid {
+  display: grid;
+  grid-template-columns: 56px 1.4fr 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 12px;
+}
+
+.tv-horarios-grid .celda {
+  background: #8a8a8a;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  min-height: 24px;
+}
+
+.tv-horarios-grid .celda--numero {
+  background: #6f6f6f;
+  font-size: 18px;
+}
+
+.tv-horarios-grid .celda--activa {
+  background: #4a7a4a;
+}
+
+.tv-subrow {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 16px;
+  padding: 0 12px 12px;
+}
+
+/* ===== RELOJ ===== */
+.tv-panel--reloj {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 16px;
   gap: 12px;
 }
 
-.tv-card {
-  background: var(--bg3);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  border-left: 5px solid var(--border);
+.tv-reloj__analogico {
   position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #6f6f6f;
+  margin: 0 auto;
 }
-.tv-card.live {
-  border-left-color: var(--live);
-  background: #0d2718;
-}
-.tv-card-semestre {
-  font-size: .72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: 5px;
-}
-.tv-card-materia {
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: #fff;
-  margin-bottom: 4px;
-}
-.tv-card-meta {
-  font-size: .78rem;
-  color: var(--text-muted);
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 4px;
-}
-.tv-badge-live {
+
+.tv-reloj__manecilla {
   position: absolute;
-  top: 10px; right: 12px;
-  background: var(--live);
-  color: #000;
-  font-size: .65rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
+  left: 50%;
+  bottom: 50%;
+  transform-origin: bottom center;
+  background: #111111;
+  border-radius: 4px;
 }
 
-/* EXAMENES */
-.tv-exam-list { display: flex; flex-direction: column; gap: 10px; }
+.tv-reloj__hora {
+  width: 5px;
+  height: 40px;
+  margin-left: -2.5px;
+}
 
-.tv-exam-card {
-  background: var(--bg3);
-  border-radius: var(--radius);
-  padding: 13px 16px;
-  border-left: 5px solid var(--exam);
+.tv-reloj__minuto {
+  width: 4px;
+  height: 55px;
+  margin-left: -2px;
+}
+
+.tv-reloj__segundo {
+  width: 2px;
+  height: 62px;
+  margin-left: -1px;
+  background: #b02020;
+}
+
+.tv-reloj__centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: #111111;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.tv-reloj__info {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.tv-reloj__fecha,
+.tv-reloj__patria {
+  background: #d6d6d6;
+  border: 2px solid #000000;
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+/* ===== EXAMENES ===== */
+.tv-examenes-lista {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
   gap: 4px;
 }
-.tv-exam-semestre {
-  font-size: .7rem;
+
+.tv-examenes-lista .examen-fila {
+  background: #8a8a8a;
+  color: #ffffff;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: 2px;
-}
-.tv-exam-tipo {
-  display: inline-block;
-  width: fit-content;
-  font-size: .7rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: rgba(245,158,11,.15);
-  color: var(--exam);
-  border: 1px solid rgba(245,158,11,.3);
-  margin-bottom: 2px;
-}
-.tv-exam-materia {
-  font-size: .98rem;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.3;
-}
-.tv-exam-meta {
-  font-size: .78rem;
-  color: var(--text-muted);
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
+  font-size: 13px;
+  padding: 10px 12px;
 }
 
-/* EMPTY */
-.tv-empty {
-  color: var(--text-muted);
-  font-size: .9rem;
-  padding: 14px 0;
-  font-style: italic;
+/* ===== NOTICIAS (sidebar) ===== */
+.tv-panel--noticias {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
-/* FOOTER TICKER */
-.tv-footer {
+.tv-noticias-lista {
+  list-style: none;
+  margin: 0;
+  padding: 12px 16px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg2);
-  border-top: 2px solid var(--border);
-  padding: 8px 24px;
-  flex-shrink: 0;
-  gap: 20px;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-y: auto;
 }
-.tv-ticker-wrap { flex: 1; overflow: hidden; }
-.tv-ticker {
-  display: inline-block;
+
+.tv-noticias-lista li {
+  border-bottom: 1px solid #bbbbbb;
+  padding-bottom: 8px;
+}
+
+/* ===== FOOTER TICKER RSS ===== */
+.tv-footer-ticker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #000000;
+  color: #ffffff;
+  overflow: hidden;
   white-space: nowrap;
-  animation: ticker-scroll 50s linear infinite;
-  color: var(--text-muted);
-  font-size: .82rem;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 700;
+  z-index: 999;
+  border-top: 4px solid #ffffff;
 }
-@keyframes ticker-scroll {
-  0%   { transform: translateX(100vw); }
+
+.tv-footer-ticker__track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: tv-ticker-scroll 60s linear infinite;
+}
+
+.tv-footer-ticker__item {
+  display: inline-block;
+  margin-right: 60px;
+}
+
+.tv-footer-ticker__item::before {
+  content: "NOTICIAS RSS \2022  ";
+  color: #cccccc;
+}
+
+@keyframes tv-ticker-scroll {
+  0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 }
-.tv-refresh-info {
-  font-size: .78rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  flex-shrink: 0;
+
+@media (max-width: 1100px) {
+  .tv-main {
+    grid-template-columns: 1fr;
+  }
+  .tv-subrow {
+    grid-template-columns: 1fr;
+  }
 }

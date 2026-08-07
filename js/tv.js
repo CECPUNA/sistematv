@@ -1,219 +1,156 @@
-/* ==============================================
-   Sistema TV - Ciencias Politicas UNA
-   tv.js - logica principal
-   ============================================== */
+(function () {
+  var TV_DATA_URL = "data/tv.json";
+  var NOTICIAS_DATA_URL = "data/noticias.json";
+  var NOTICIAS_REFRESH_MS = 5 * 60 * 1000;
 
-const CONFIG_URL   = 'data/tv.json';
-const REFRESH_MIN  = 5;
- const DURACION_BLQ = 45;
-const MAX_PROXIMAS = 6;
+  var MESES = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+  ];
+  var DIAS = [
+    "domingo", "lunes", "martes", "mi\u00e9rcoles",
+    "jueves", "viernes", "s\u00e1bado"
+  ];
 
-const DIAS_ES  = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
-const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio',
-                  'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  function actualizarReloj() {
+    var ahora = new Date();
+    var horas = ahora.getHours() % 12;
+    var minutos = ahora.getMinutes();
+    var segundos = ahora.getSeconds();
 
-const DIAS_ES_FULL = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
-const MESES_ES_FULL = ['enero','febrero','marzo','abril','mayo','junio',
-                       'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    var gradosHora = (horas + minutos / 60) * 30;
+    var gradosMinuto = (minutos + segundos / 60) * 6;
+    var gradosSegundo = segundos * 6;
 
-let semestresConfig = [];
-let todosDatos      = {};
-let cuentaSeg       = REFRESH_MIN * 60;
+    var manecillaHora = document.getElementById("manecilla-hora");
+    var manecillaMinuto = document.getElementById("manecilla-minuto");
+    var manecillaSegundo = document.getElementById("manecilla-segundo");
 
-/* RELOJ */
-function tickReloj() {
-  const n  = new Date();
-  const hh = String(n.getHours()).padStart(2,'0');
-  const mm = String(n.getMinutes()).padStart(2,'0');
-  const ss = String(n.getSeconds()).padStart(2,'0');
-  document.getElementById('reloj').textContent = hh + ':' + mm + ':' + ss;
-  const dia = DIAS_ES_FULL[n.getDay()];
-  document.getElementById('fecha').textContent =
-    dia + ', ' + n.getDate() + ' de ' + MESES_ES_FULL[n.getMonth()] + ' de ' + n.getFullYear();
-}
+    if (manecillaHora) manecillaHora.style.transform = "rotate(" + gradosHora + "deg)";
+    if (manecillaMinuto) manecillaMinuto.style.transform = "rotate(" + gradosMinuto + "deg)";
+    if (manecillaSegundo) manecillaSegundo.style.transform = "rotate(" + gradosSegundo + "deg)";
 
-/* CUENTA REGRESIVA */
-function tickRefresh() {
-  cuentaSeg--;
-  if (cuentaSeg <= 0) {
-    cuentaSeg = REFRESH_MIN * 60;
-    cargarTodosLosDatos();
+    var fechaEl = document.getElementById("fecha-actual");
+    if (fechaEl) {
+      var texto = DIAS[ahora.getDay()] + " " + ahora.getDate() + " de " +
+        MESES[ahora.getMonth()] + " de " + ahora.getFullYear();
+      fechaEl.textContent = texto.toUpperCase();
+    }
   }
-  const m  = Math.floor(cuentaSeg / 60);
-  const s  = String(cuentaSeg % 60).padStart(2,'0');
-  const el = document.getElementById('cuentaRegresiva');
-  if (el) el.textContent = m + ':' + s;
-}
 
-/* CARGA DE DATOS */
-async function cargarConfig() {
-  const r   = await fetch(CONFIG_URL + '?_v=' + Date.now(), { cache: 'no-store' });
-  const cfg = await r.json();
-  semestresConfig = cfg.semestres || [];
-}
-
-async function cargarSemestre(sem) {
-  try {
-    const r    = await fetch(sem.dataUrl + '?_v=' + Date.now(), { cache: 'no-store' });
-    const data = await r.json();
-    todosDatos[sem.id] = {
-      horario:  data.horario  || [],
-      examenes: data.examenes || []
-    };
-  } catch (e) {
-    console.warn('[TV] No se pudo cargar ' + sem.id + ':', e.message);
-    todosDatos[sem.id] = { horario: [], examenes: [] };
+  function actualizarProximaFechaPatria(info) {
+    var el = document.getElementById("proxima-fecha-patria");
+    if (!el || !info) return;
+    var fecha = new Date(info.fecha + "T00:00:00");
+    var texto = info.nombre + " - " + fecha.getDate() + " de " + MESES[fecha.getMonth()];
+    el.textContent = texto.toUpperCase();
   }
-}
 
-async function cargarTodosLosDatos() {
-  await Promise.all(semestresConfig.map(function(s){ return cargarSemestre(s); }));
-  renderTodo();
-}
+  function renderHorarios(grados) {
+    var contenedor = document.getElementById("horarios-grid");
+    if (!contenedor || !grados) return;
+    contenedor.innerHTML = "";
 
-/* HELPERS */
-function horaAMin(str) {
-  str = str || '0:0';
-  var parts = str.split(':');
-  return parseInt(parts[0],10) * 60 + (parseInt(parts[1],10) || 0);
-}
-function minActual() {
-  var n = new Date();
-  return n.getHours() * 60 + n.getMinutes();
-}
-function diaHoy() {
-  return DIAS_ES_FULL[new Date().getDay()];
-}
+    grados.forEach(function (grado) {
+      var numero = document.createElement("div");
+      numero.className = "celda celda--numero";
+      numero.textContent = (grado.nombre.match(/\\d+/) || [""])[0];
+      contenedor.appendChild(numero);
 
-/* RENDER */
-function renderTodo() {
-  renderClasesAhora();
-  renderClasesProximas();
-  renderExamenes();
-}
+      var activa = document.createElement("div");
+      activa.className = "celda celda--activa";
+      activa.textContent = grado.activa || "SIN CLASE ACTIVA";
+      contenedor.appendChild(activa);
 
-function renderClasesAhora() {
-  var c   = document.getElementById('clasesAhora');
-  var hoy = diaHoy();
-  var min = minActual();
-  var cards = [];
-
-  semestresConfig.forEach(function(sem) {
-    var datos = todosDatos[sem.id];
-    if (!datos) return;
-    var vistos = {};
-    datos.horario.forEach(function(b) {
-      if (b.dia !== hoy) return;
-      var inicio = horaAMin(b.hora || b.desde);
-      var fin    = inicio + DURACION_BLQ;
-      if (min < inicio || min >= fin) return;
-      var key = sem.id + '|' + b.materia;
-      if (vistos[key]) return;
-      vistos[key] = true;
-      cards.push(cardClase(sem, b, true));
+      var proximas = grado.proximas || [];
+      for (var i = 0; i < 3; i++) {
+        var celda = document.createElement("div");
+        celda.className = "celda";
+        celda.textContent = proximas[i] ? proximas[i].toUpperCase() : "PROXIMA CLASE";
+        contenedor.appendChild(celda);
+      }
     });
-  });
-
-  c.innerHTML = cards.length
-    ? cards.join('')
-    : '<div class="tv-empty">Sin clases en este momento</div>';
-}
-
-function renderClasesProximas() {
-  var c   = document.getElementById('clasesProximas');
-  var hoy = diaHoy();
-  var min = minActual();
-  var futuras = [];
-
-  semestresConfig.forEach(function(sem) {
-    var datos = todosDatos[sem.id];
-    if (!datos) return;
-    var vistos = {};
-    datos.horario
-      .filter(function(b){ return b.dia === hoy; })
-      .forEach(function(b) {
-        var minI = horaAMin(b.hora || b.desde);
-        if (minI <= min) return;
-        var key = sem.id + '|' + b.materia + '|' + (b.hora || b.desde);
-        if (vistos[key]) return;
-        vistos[key] = true;
-        futuras.push({ sem: sem, b: b, minI: minI });
-      });
-  });
-
-  futuras.sort(function(a,z){ return a.minI - z.minI; });
-  var cards = futuras.slice(0, MAX_PROXIMAS).map(function(item){
-    return cardClase(item.sem, item.b, false);
-  });
-  c.innerHTML = cards.length
-    ? cards.join('')
-    : '<div class="tv-empty">Sin m\u00e1s clases hoy</div>';
-}
-
-function cardClase(sem, b, esLive) {
-  var desde = b.desde || b.hora || '';
-  var hasta = b.hasta || '';
-  var rango = hasta ? (desde + ' \u2013 ' + hasta) : desde;
-  var badge = esLive ? '<span class="tv-badge-live">En curso</span>' : '';
-  return '<div class="tv-card' + (esLive ? ' live' : '') + '" style="border-left-color:' + sem.color + '">'
-    + badge
-    + '<div class="tv-card-semestre" style="color:' + sem.color + '">' + sem.label + '</div>'
-    + '<div class="tv-card-materia">' + esc(b.materia) + '</div>'
-    + '<div class="tv-card-meta">'
-    + '<span>\u{1F550} ' + esc(rango) + '</span>'
-    + '<span>\u{1F464} ' + esc(b.profesor || 'Docente') + '</span>'
-    + '</div></div>';
-}
-
-function renderExamenes() {
-  var c    = document.getElementById('examenesContainer');
-  var todo = [];
-
-  semestresConfig.forEach(function(sem) {
-    var datos = todosDatos[sem.id];
-    if (!datos || !datos.examenes || !datos.examenes.length) return;
-    datos.examenes.forEach(function(ex){ todo.push({ sem: sem, ex: ex }); });
-  });
-
-  if (!todo.length) {
-    c.innerHTML = '<div class="tv-empty">Sin ex\u00e1menes programados</div>';
-    return;
   }
 
-  c.innerHTML = todo.map(function(item) {
-    var sem = item.sem, ex = item.ex;
-    var aula  = ex.aula     ? '<span>&#128682; Aula ' + esc(ex.aula) + '</span>' : '';
-    var prof  = ex.profesor ? '<span>&#128100; ' + esc(ex.profesor) + '</span>'  : '';
-    return '<div class="tv-exam-card" style="border-left-color:' + sem.color + '">'
-      + '<div class="tv-exam-semestre" style="color:' + sem.color + '">' + sem.label + '</div>'
-      + '<span class="tv-exam-tipo">' + esc(ex.tipo || 'Examen') + '</span>'
-      + '<div class="tv-exam-materia">' + esc(ex.materia) + '</div>'
-      + '<div class="tv-exam-meta">'
-      + '<span>&#128197; ' + esc(ex.fecha || '') + '</span>'
-      + '<span>&#128336; ' + esc(ex.hora  || '') + '</span>'
-      + aula + prof
-      + '</div></div>';
-  }).join('');
-}
+  function renderExamenes(examenes) {
+    var contenedor = document.getElementById("examenes-lista");
+    if (!contenedor || !examenes) return;
+    contenedor.innerHTML = "";
 
-function esc(str) {
-  var d = document.createElement('div');
-  d.textContent = str != null ? str : '';
-  return d.innerHTML;
-}
+    Object.keys(examenes).forEach(function (grado) {
+      var fila = document.createElement("div");
+      fila.className = "examen-fila";
+      var items = examenes[grado] || [];
+      var texto = "EXAMENES " + grado.toUpperCase();
+      if (items.length) texto += ": " + items.join(" | ");
+      fila.textContent = texto;
+      contenedor.appendChild(fila);
+    });
+  }
 
-/* INIT */
-function init() {
-  tickReloj();
-  setInterval(tickReloj,   1000);
-  setInterval(tickRefresh, 1000);
-  setInterval(renderTodo,  60000);
+  function cargarDatosTV() {
+    fetch(TV_DATA_URL + "?t=" + Date.now())
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        renderHorarios(data.grados);
+        renderExamenes(data.examenes);
+        actualizarProximaFechaPatria(data.proximaFechaPatria);
+      })
+      .catch(function (err) {
+        console.error("Error cargando data/tv.json:", err);
+      });
+  }
 
-  cargarConfig().then(function(){
-    return cargarTodosLosDatos();
-  }).catch(function(e){
-    console.error('[TV] Error de inicializacion:', e);
+  function renderNoticiasLateral(items) {
+    var lista = document.getElementById("noticias-lista");
+    if (!lista) return;
+    lista.innerHTML = "";
+    (items || []).slice(0, 8).forEach(function (n) {
+      var li = document.createElement("li");
+      li.textContent = n.titulo;
+      lista.appendChild(li);
+    });
+  }
+
+  function renderTickerFooter(items) {
+    var footer = document.getElementById("noticias-footer");
+    if (!footer) return;
+    if (!items || !items.length) {
+      footer.innerHTML = "";
+      return;
+    }
+    var track = document.createElement("div");
+    track.className = "tv-footer-ticker__track";
+    items.forEach(function (n) {
+      var span = document.createElement("span");
+      span.className = "tv-footer-ticker__item";
+      span.textContent = n.titulo;
+      track.appendChild(span);
+    });
+    footer.innerHTML = "";
+    footer.appendChild(track);
+  }
+
+  function cargarNoticias() {
+    fetch(NOTICIAS_DATA_URL + "?t=" + Date.now())
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        renderNoticiasLateral(data.items);
+        renderTickerFooter(data.items);
+      })
+      .catch(function (err) {
+        console.error("Error cargando data/noticias.json:", err);
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    actualizarReloj();
+    setInterval(actualizarReloj, 1000);
+
+    cargarDatosTV();
+    setInterval(cargarDatosTV, 10 * 60 * 1000);
+
+    cargarNoticias();
+    setInterval(cargarNoticias, NOTICIAS_REFRESH_MS);
   });
-}
-
-document.addEventListener('DOMContentLoaded', init);
+})();

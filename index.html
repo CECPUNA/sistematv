@@ -1,75 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema TV – Cs. Políticas UNA</title>
-  <link rel="stylesheet" href="css/tv.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Información Académica - CECP</title>
+  <link rel="stylesheet" href="css/tv.css">
 </head>
 <body>
-<div id="app">
 
-  <!-- HEADER -->
   <header class="tv-header">
-    <div class="tv-header-left">
-      <img src="img/logo-cecp.png" alt="CECP" class="tv-logo" onerror="this.style.display='none'" />
-      <div>
-        <div class="tv-titulo">Ciencias Políticas &middot; UNA</div>
-        <div class="tv-subtitulo">Campus Escuela &ndash; Información Académica</div>
+    <div class="tv-header__brand">
+      <img class="tv-header__logo" src="assets/logo-cecp.png" alt="Centro de Estudiantes - Escuela de Ciencias Políticas">
+      <div class="tv-header__brand-text">
+        <span class="tv-header__title">CENTRO DE ESTUDIANTES</span>
+        <span class="tv-header__subtitle">ESCUELA DE CIENCIAS POLÍTICAS</span>
       </div>
     </div>
-    <div class="tv-header-right">
-      <div class="tv-reloj" id="reloj">00:00:00</div>
-      <div class="tv-fecha" id="fecha">Cargando...</div>
+
+    <div class="tv-header__seal">
+      <img src="assets/sello-una.png" alt="Universidad Nacional de Asunción">
+    </div>
+
+    <div class="tv-header__system">
+      <img class="tv-header__logo" src="assets/icono-sistema.png" alt="">
+      <div class="tv-header__brand-text">
+        <span class="tv-header__title">SISTEMA DE INFORMACIÓN ACADÉMICA - CECP</span>
+        <span class="tv-header__subtitle">CENTRO DE ESTUDIANTES - ESCUELA DE CIENCIAS POLITICAS</span>
+      </div>
     </div>
   </header>
 
-  <!-- MAIN: izquierda (clases) + derecha (exámenes) -->
   <main class="tv-main">
 
-    <!-- IZQUIERDA -->
-    <section class="tv-col tv-col-clases">
-      <div class="tv-section-title">
-        <span class="punto-live"></span> Clases en Curso
-      </div>
-      <div id="clasesAhora" class="tv-cards-grid">
-        <div class="tv-empty">Sin clases en este momento</div>
-      </div>
+    <section class="tv-panel tv-panel--horarios">
+      <h2 class="tv-panel__title">HORARIOS DE CLASE ACTIVOS</h2>
+      <div id="horarios-grid" class="tv-horarios-grid"></div>
 
-      <div class="tv-section-title tv-mt">
-        <span class="icono-prox">&#9654;</span> Próximas Hoy
-      </div>
-      <div id="clasesProximas" class="tv-cards-grid">
-        <div class="tv-empty">Sin más clases hoy</div>
+      <div class="tv-subrow">
+        <div class="tv-panel tv-panel--reloj">
+          <div class="tv-reloj__analogico" id="reloj-analogico">
+            <div class="tv-reloj__manecilla tv-reloj__hora" id="manecilla-hora"></div>
+            <div class="tv-reloj__manecilla tv-reloj__minuto" id="manecilla-minuto"></div>
+            <div class="tv-reloj__manecilla tv-reloj__segundo" id="manecilla-segundo"></div>
+            <div class="tv-reloj__centro"></div>
+          </div>
+          <div class="tv-reloj__info">
+            <div class="tv-reloj__fecha" id="fecha-actual">FECHA</div>
+            <div class="tv-reloj__patria" id="proxima-fecha-patria">PRÓXIMA FECHA PATRIA</div>
+          </div>
+        </div>
+
+        <div class="tv-panel tv-panel--examenes">
+          <h2 class="tv-panel__title">FECHAS DE EXÁMENES</h2>
+          <div id="examenes-lista" class="tv-examenes-lista"></div>
+        </div>
       </div>
     </section>
 
-    <!-- DERECHA -->
-    <section class="tv-col tv-col-examenes">
-      <div class="tv-section-title">
-        &#128203; Horario de Exámenes
-      </div>
-      <div id="examenesContainer" class="tv-exam-list">
-        <div class="tv-empty">Sin exámenes programados</div>
-      </div>
-    </section>
+    <aside class="tv-panel tv-panel--noticias">
+      <h2 class="tv-panel__title">NOTICIAS</h2>
+      <ul id="noticias-lista" class="tv-noticias-lista"></ul>
+    </aside>
 
   </main>
 
-  <!-- FOOTER TICKER -->
-  <footer class="tv-footer">
-    <div class="tv-ticker-wrap">
-      <div class="tv-ticker" id="ticker">
-        Escuela de Ciencias Políticas &middot; Universidad Nacional de Asunción
-        &middot; Actualizado automáticamente cada 5 minutos
-      </div>
-    </div>
-    <div class="tv-refresh-info">
-      Próxima actualización: <span id="cuentaRegresiva">5:00</span>
-    </div>
-  </footer>
+  <footer id="noticias-footer" class="tv-footer-ticker"></footer>
 
-</div>
-<script src="js/tv.js"></script>
+  <script src="js/tv.js" defer></script>
 </body>
 </html>
